@@ -1,2 +1,4 @@
 etat/
 __pycache__/
+collecte_locale.ps1
+collecte_locale.log
