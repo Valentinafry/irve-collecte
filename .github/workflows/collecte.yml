@@ -1,8 +1,11 @@
 name: Collecte IRVE dynamique
 
+# NB : les crons haute frequence sont deprioritises par GitHub sur les
+# depots recents — */10 est nettement plus fiable que */5, et l'horodatage
+# OPERATEUR conserve dans les evenements garde les heures exactes.
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 permissions:
