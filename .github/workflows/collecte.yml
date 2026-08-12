@@ -1,0 +1,51 @@
+name: Collecte IRVE dynamique
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collecte
+  cancel-in-progress: false
+
+jobs:
+  collecte:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install --quiet requests pandas
+
+      # dernier etat connu (non versionne : restaure depuis le cache)
+      - uses: actions/cache/restore@v4
+        with:
+          path: etat
+          key: etat-${{ github.run_id }}
+          restore-keys: |
+            etat-
+
+      - run: python collecte.py
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: etat
+          key: etat-${{ github.run_id }}
+
+      - name: Enregistrer les evenements
+        run: |
+          git config user.name "collecteur-irve"
+          git config user.email "actions@users.noreply.github.com"
+          git add donnees
+          git diff --cached --quiet || git commit -m "collecte $(date -u +'%Y-%m-%d %H:%M')"
+          git pull --rebase origin ${{ github.ref_name }}
+          git push
