@@ -6,6 +6,10 @@ set -uo pipefail
 cd "$(dirname "$0")" || exit 1
 export GIT_TERMINAL_PROMPT=0
 
+git config core.fileMode false            # ignore les bits exécutables (sinon
+                                          # l'arbre paraît sale et bloque le pull)
+git rebase --abort 2>/dev/null || true    # nettoie un rebase resté coincé
+git checkout -- collecte_vm.sh 2>/dev/null || true
 git pull --rebase --quiet origin main 2>/dev/null || true
 python3 collecte.py >> collecte_vm.log 2>&1
 
