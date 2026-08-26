@@ -12,13 +12,14 @@ git config core.fileMode false            # ignore les bits exécutables
 
 python3 collecte.py >> collecte_vm.log 2>&1
 python3 collecte_nl.py >> collecte_vm.log 2>&1
+python3 collecte_fi.py >> collecte_vm.log 2>&1      # statuts temps reel FI
 python3 collecte_no.py >> collecte_vm.log 2>&1      # dormant sans cle NOBIL
 python3 collecte_at.py >> collecte_vm.log 2>&1      # photo quotidienne AT
 python3 collecte_de.py >> collecte_vm.log 2>&1      # registre DE par millesime
 python3 collecte_ch.py >> collecte_vm.log 2>&1      # statuts temps reel CH
 python3 collecte_lu.py >> collecte_vm.log 2>&1      # occupation stations LU
 
-for d in donnees donnees_nl donnees_no donnees_at donnees_de donnees_ch donnees_lu; do
+for d in donnees donnees_nl donnees_fi donnees_no donnees_at donnees_de donnees_ch donnees_lu; do
     [ -d "$d" ] && git add "$d"
 done
 if ! git diff --cached --quiet; then

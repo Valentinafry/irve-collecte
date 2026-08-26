@@ -42,6 +42,13 @@ Les cles vivent dans `cles/` (gitignore, a creer sur la VM ET en local).
        [Install]
        WantedBy=multi-user.target
 
+**Finlande (Fintraffic / Digitraffic, API AFIR) — ACTIF depuis le 26/08/2026** :
+`collecte_fi.py`, statuts temps reel de ~19 850 EVSE (AVAILABLE / CHARGING /
+OUTOFORDER...) via l'API ouverte afir.digitraffic.fi (sans cle, pagination
+par curseur, snapshots a la minute) + locations (GeoJSON) et tarifs en copie
+mensuelle. Horodatage operateur (`lastUpdatedAt`) conserve. Donnees dans
+`donnees_fi/`.
+
 **Suisse (ich-tanke-strom / DIEMO, OFEN) — ACTIF depuis le 26/08/2026** :
 `collecte_ch.py`, statuts temps reel de ~19 200 EVSE (JSON federal sans
 cle, data.geo.admin.ch) + statique mensuel. Pas d'horodatage operateur :
