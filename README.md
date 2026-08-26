@@ -42,11 +42,15 @@ Les cles vivent dans `cles/` (gitignore, a creer sur la VM ET en local).
        [Install]
        WantedBy=multi-user.target
 
-**Autriche (Ladestellenverzeichnis E-Control)** : inscription sur
-[admin.ladestellen.at](https://admin.ladestellen.at/#/api/registrieren)
-(identifiants par e-mail, documentation des endpoints accessible apres
-inscription) -> deposer dans `cles/ladestellen_identifiants.txt` puis
-finaliser `collecte_at.py` avec la documentation obtenue.
+**Autriche (Ladestellenverzeichnis E-Control) — ACTIF depuis le 26/08/2026** :
+`collecte_at.py` archive une photo QUOTIDIENNE du parc complet via le flux
+groupe `/search/stations` (~15 800 stations, ~40 000 points, avec les PRIX
+structures — cent/kWh, frais de demarrage et de blocage). Cle API en
+en-tete `Apikey` (en minuscules) + `Referer: https://afry.com` (domaine
+declare), stockee dans `cles/ladestellen_identifiants.txt`. Le statut temps
+reel n'existe pas dans le flux groupe (detail par station uniquement,
+~15 800 requetes par balayage) : piste = flux DATEX II AFIR, a demander a
+support@ladestellen.at.
 
 ## Fonctionnement
 
