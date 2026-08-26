@@ -29,19 +29,24 @@ from pathlib import Path
 
 RACINE = Path(__file__).resolve().parent
 CLE = RACINE / "cles" / "enova_subscription.txt"
+CLE_NOBIL = RACINE / "cles" / "nobil_apikey.txt"
 DONNEES = RACINE / "donnees_no" / "evenements"
 URL_NEGO = "https://data.enova.no/real-time/v1/Realtime"
 
 
-def url_flux(cle: str) -> str:
+def url_flux(cle: str, cle_nobil: str) -> str:
+    """Negociation constatee sur le portail Enova (08/2026) : POST avec la
+    cle de souscription (Ocp-Apim-Subscription-Key) ET la cle API NOBIL
+    (en-tete x-api-key). La reponse contient l'URL de connexion au flux."""
     import requests
-    r = requests.get(URL_NEGO,
-                     headers={"Ocp-Apim-Subscription-Key": cle}, timeout=60)
+    r = requests.post(URL_NEGO,
+                      headers={"Ocp-Apim-Subscription-Key": cle,
+                               "x-api-key": cle_nobil,
+                               "Cache-Control": "no-cache"}, timeout=60)
     r.raise_for_status()
     d = r.json()
-    # la reponse contient l'URL de connexion au flux (nom de champ selon la
-    # plateforme : url / uri / accessUrl) — on prend le premier present
-    for champ in ("url", "uri", "accessUrl", "webSocketUrl"):
+    for champ in ("url", "uri", "accessUrl", "webSocketUrl", "connectionUrl",
+                  "wssUrl"):
         if isinstance(d, dict) and d.get(champ):
             return str(d[champ])
     raise RuntimeError(f"reponse inattendue de la negociation : {d}")
@@ -59,9 +64,9 @@ def ecrire(message: str) -> None:
 
 
 def main() -> int:
-    if not CLE.exists():
-        print("nobil temps reel : cle absente "
-              "(cles/enova_subscription.txt) — ecoute sautee")
+    if not CLE.exists() or not CLE_NOBIL.exists():
+        print("nobil temps reel : cles absentes (cles/enova_subscription.txt "
+              "et cles/nobil_apikey.txt requises) — ecoute sautee")
         return 0
     try:
         from websockets.sync.client import connect
@@ -69,10 +74,11 @@ def main() -> int:
         print("nobil temps reel : pip install websockets")
         return 1
     cle = CLE.read_text(encoding="utf-8").strip()
+    cle_nobil = CLE_NOBIL.read_text(encoding="utf-8").strip()
     attente = 5
     while True:
         try:
-            adresse = url_flux(cle)
+            adresse = url_flux(cle, cle_nobil)
             print(f"connexion au flux : {adresse[:60]}...")
             with connect(adresse) as ws:
                 attente = 5                      # connexion OK : raz du delai
