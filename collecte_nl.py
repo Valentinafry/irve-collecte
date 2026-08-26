@@ -54,8 +54,19 @@ def telecharger(url: str, essais: int = 3) -> bytes | None:
 
 
 def aplatir(brut: bytes) -> pd.DataFrame:
-    """Dump OCPI -> une ligne par EVSE : evse_id, statut, last_updated."""
-    locations = json.loads(gzip.decompress(brut))
+    """Dump OCPI -> une ligne par EVSE : evse_id, statut, last_updated.
+
+    Parse en FLUX (ijson) : le JSON decompresse pese ~250 Mo et le charger
+    d'un bloc a fait tuer le processus par l'OOM killer sur la VM de 950 Mo
+    (constate le 26/08/2026). En flux, la memoire reste sous ~100 Mo."""
+    flux = gzip.GzipFile(fileobj=io.BytesIO(brut))
+    try:
+        import ijson
+        locations = ijson.items(flux, "item")
+    except ImportError:
+        print("  (ijson absent — parse en memoire, gourmand : "
+              "pip3 install ijson)")
+        locations = json.loads(gzip.decompress(brut))
     lignes = []
     for loc in locations:
         for evse in loc.get("evses") or []:
