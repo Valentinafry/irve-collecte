@@ -42,6 +42,16 @@ Les cles vivent dans `cles/` (gitignore, a creer sur la VM ET en local).
        [Install]
        WantedBy=multi-user.target
 
+**Suisse (ich-tanke-strom / DIEMO, OFEN) — ACTIF depuis le 26/08/2026** :
+`collecte_ch.py`, statuts temps reel de ~19 200 EVSE (JSON federal sans
+cle, data.geo.admin.ch) + statique mensuel. Pas d'horodatage operateur :
+precision = cadence de collecte. Donnees dans `donnees_ch/`.
+
+**Luxembourg (Chargy) — ACTIF depuis le 26/08/2026** : `collecte_lu.py`,
+occupation PAR STATION (disponibles/occupes) des ~530 stations Chargy, KML
+officiel de data.public.lu (cle publique, rafraichi ~5 min, rate-limite :
+un appel par cycle maximum). Donnees dans `donnees_lu/`.
+
 **Allemagne (Ladesaeulenregister BNetzA) — ACTIF depuis le 26/08/2026** :
 `collecte_de.py` archive chaque nouveau MILLESIME du registre federal
 (~210 000 points : operateurs, puissances, dates de mise en service ;
