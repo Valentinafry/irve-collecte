@@ -42,6 +42,16 @@ Les cles vivent dans `cles/` (gitignore, a creer sur la VM ET en local).
        [Install]
        WantedBy=multi-user.target
 
+**Allemagne (Ladesaeulenregister BNetzA) — ACTIF depuis le 26/08/2026** :
+`collecte_de.py` archive chaque nouveau MILLESIME du registre federal
+(~210 000 points : operateurs, puissances, dates de mise en service ;
+CC-BY 4.0, attribution Bundesnetzagentur.de, ~9 Mo gzip par millesime,
+renouvele environ mensuellement). Sans cle. Pas de statut temps reel :
+le dynamique allemand passe par Mobilithek (compte gratuit + abonnement
+par operateur, DATEX II obligatoire depuis le 14/04/2026) — a brancher
+quand le besoin le justifiera. Interface REST quotidienne du registre
+disponible sur demande a ladesaeulenregister@bnetza.de.
+
 **Autriche (Ladestellenverzeichnis E-Control) — ACTIF depuis le 26/08/2026** :
 `collecte_at.py` archive une photo QUOTIDIENNE du parc complet via le flux
 groupe `/search/stations` (~15 800 stations, ~40 000 points, avec les PRIX
