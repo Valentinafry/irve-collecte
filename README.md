@@ -14,6 +14,40 @@ CHARGING / BLOCKED...), positions, puissances par connecteur et tarifs dans
 la copie mensuelle. Meme principe : seuls les changements de statut sont
 enregistres, horodates par l'operateur (`last_updated`).
 
+## Pays en attente de cles (scripts dormants, actives des depot de la cle)
+
+Les cles vivent dans `cles/` (gitignore, a creer sur la VM ET en local).
+
+**Norvege + Suede (NOBIL / Enova)** — deux inscriptions :
+
+1. Cle API NOBIL (referentiel) : formulaire sur
+   [nobil.no](https://info.nobil.no/api) -> deposer la cle dans
+   `cles/nobil_apikey.txt`. `collecte_no.py` archive alors le datadump
+   mensuel (stations, puissances, prises) pour NOR et SWE.
+2. Flux temps reel : compte sur [data.enova.no/signup](https://data.enova.no/signup),
+   souscrire le produit « NOBIL Real-time », deposer la cle d'abonnement
+   dans `cles/enova_subscription.txt`. Lancer `ecoute_nobil.py` en service
+   permanent (systemd) sur la VM : il negocie l'URL WebSocket et ajoute
+   chaque evenement de statut, brut, dans `donnees_no/evenements/` (jsonl).
+   Exemple d'unite systemd :
+
+       [Unit]
+       Description=Ecoute NOBIL temps reel
+       After=network-online.target
+       [Service]
+       WorkingDirectory=/home/debian/irve-collecte
+       ExecStart=/usr/bin/python3 ecoute_nobil.py
+       Restart=always
+       RestartSec=30
+       [Install]
+       WantedBy=multi-user.target
+
+**Autriche (Ladestellenverzeichnis E-Control)** : inscription sur
+[admin.ladestellen.at](https://admin.ladestellen.at/#/api/registrieren)
+(identifiants par e-mail, documentation des endpoints accessible apres
+inscription) -> deposer dans `cles/ladestellen_identifiants.txt` puis
+finaliser `collecte_at.py` avec la documentation obtenue.
+
 ## Fonctionnement
 
 Toutes les ~5 minutes (GitHub Actions), `collecte.py` :
