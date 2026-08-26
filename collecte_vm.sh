@@ -11,8 +11,9 @@ export GIT_TERMINAL_PROMPT=0
 git config core.fileMode false            # ignore les bits exécutables
 
 python3 collecte.py >> collecte_vm.log 2>&1
+python3 collecte_nl.py >> collecte_vm.log 2>&1
 
-git add donnees
+git add donnees donnees_nl
 if ! git diff --cached --quiet; then
     git commit --quiet -m "collecte vm $(date -u +'%Y-%m-%d %H:%M')"
     if ! git push --quiet origin main 2>/dev/null; then

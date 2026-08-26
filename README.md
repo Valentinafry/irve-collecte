@@ -1,10 +1,18 @@
-# Collecte IRVE dynamique
+# Collecte IRVE dynamique (France + Pays-Bas)
 
 Historisation des statuts temps reel des points de charge publics francais
 (libre / occupe / hors service), a partir de la consolidation nationale du
 Point d'Acces National [transport.data.gouv.fr](https://transport.data.gouv.fr).
 Ces statuts sont publies en continu mais **aucun historique national n'est
 conserve** : ce depot l'enregistre.
+
+Depuis le 26/08/2026, le depot collecte aussi les PAYS-BAS (`collecte_nl.py`,
+donnees dans `donnees_nl/`) : dump national OCPI 2.2.1 du Point d'Acces
+National neerlandais [opendata.ndw.nu](https://opendata.ndw.nu) (obligation
+AFIR art. 20) — ~80 000 stations, ~200 000 EVSE, statuts OCPI (AVAILABLE /
+CHARGING / BLOCKED...), positions, puissances par connecteur et tarifs dans
+la copie mensuelle. Meme principe : seuls les changements de statut sont
+enregistres, horodates par l'operateur (`last_updated`).
 
 ## Fonctionnement
 
